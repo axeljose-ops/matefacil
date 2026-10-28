@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MateFácil</title>
+<style>
+body{font-family:Arial,sans-serif;background:#eff6ff;color:#172554;margin:0;padding:20px}main{max-width:600px;margin:auto}header{text-align:center;background:#4338ca;color:white;padding:20px;border-radius:18px}section{background:white;padding:18px;margin-top:15px;border-radius:16px;box-shadow:0 3px 12px #0001}button,input{font-size:17px;padding:12px;border-radius:10px;border:1px solid #cbd5e1}button{cursor:pointer;background:#dbeafe;color:#1e40af;font-weight:bold}.ops{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.ops button.active{background:#4338ca;color:white}input{width:90%;margin:5px 0}.result{font-size:24px;font-weight:bold;overflow-wrap:anywhere;color:#4338ca}li{margin:12px 0;line-height:1.4}
+</style>
+</head>
+<body><main>
+<header><h1>📚 MateFácil</h1><p>¡Aprende matemáticas paso a paso!</p></header>
+<section><h2>🧮 Resuelve tu operación</h2>
+<div class="ops"><button class="active" data-op="+">＋ Suma</button><button data-op="-">− Resta</button><button data-op="*">× Multiplica</button><button data-op="/">÷ Divide</button></div>
+<p>Primer número<br><input id="a" type="number" value="25" step="any"></p>
+<p>Segundo número<br><input id="b" type="number" value="5" step="any"></p>
+<button id="go">✨ Resolver operación</button> <button id="clear">Borrar</button>
+<h3>Resultado</h3><div class="result" id="answer">30</div><p id="equation">25 + 5 = 30</p><p id="error"></p></section>
+<section><h2>📝 Procedimiento paso a paso</h2><ol id="steps"></ol></section>
+<section><h3>💡 Recuerda</h3><p id="tip">En una suma juntas cantidades para encontrar el total.</p></section>
+</main>
+<script>
+(function(){let op="+";const el=id=>document.getElementById(id);const sym={"+":"+","-":"−","*":"×","/":"÷"};const tips={"+":"En una suma juntas cantidades para encontrar el total.","-":"En una resta encuentras la diferencia entre dos cantidades.","*":"Multiplicar es sumar una cantidad varias veces.","/":"Dividir es repartir en partes iguales. No se puede dividir entre cero."};function fmt(n){return Number(n.toPrecision(10)).toLocaleString("es-GT",{maximumFractionDigits:10})}function solve(){let x=el("a").value,y=el("b").value;el("error").textContent="";el("steps").replaceChildren();if(x===""||y===""){el("answer").textContent="—";el("equation").textContent="Escribe los dos números.";return}let a=Number(x),b=Number(y);if(op==="/"&&b===0){el("answer").textContent="No definido";el("equation").textContent=fmt(a)+" ÷ 0";el("error").textContent="No se puede dividir entre cero.";return}let r=op==="+"?a+b:op==="-"?a-b:op==="*"?a*b:a/b;r=Number(r.toPrecision(10));el("answer").textContent=fmt(r);el("equation").textContent=fmt(a)+" "+sym[op]+" "+fmt(b)+" = "+fmt(r);let lines=["Identifica los números: "+fmt(a)+" y "+fmt(b)+".",op==="+"?"Junta ambas cantidades: "+fmt(a)+" + "+fmt(b)+".":op==="-"?"Resta el segundo número al primero: "+fmt(a)+" − "+fmt(b)+".":op==="*"?"Multiplica "+fmt(a)+" por "+fmt(b)+".":"Divide "+fmt(a)+" entre "+fmt(b)+".","El resultado es "+fmt(r)+"."];lines.forEach(t=>{let li=document.createElement("li");li.textContent=t;el("steps").append(li)});if(op==="/"&&!Number.isInteger(r)){let li=document.createElement("li");li.textContent="El resultado tiene parte decimal.";el("steps").append(li)}}document.querySelectorAll("[data-op]").forEach(btn=>btn.addEventListener("click",()=>{op=btn.dataset.op;document.querySelectorAll("[data-op]").forEach(b=>b.classList.toggle("active",b===btn));el("tip").textContent=tips[op];solve()}));el("go").addEventListener("click",solve);el("a").addEventListener("input",solve);el("b").addEventListener("input",solve);el("clear").addEventListener("click",()=>{el("a").value="";el("b").value="";solve()});solve()})();
+</script></body></html>
